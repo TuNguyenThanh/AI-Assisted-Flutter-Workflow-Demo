@@ -57,7 +57,10 @@ trong repo đi đúng theo các bước dưới đây (`git log --oneline --reve
 ### 5. Test — tách người viết code và người viết test
 - Subagent `test-writer` chỉ được viết trong `test/`, viết từ **spec**
   chứ không từ implementation → tránh test "copy" lại bug.
-- Mỗi AC có test tên `AC-n: ...` → truy vết được requirement ↔ test.
+- Mỗi AC có test tên `<TICKET> AC-n: ...` (vd. `AUTH-001 AC-1: ...`) →
+  truy vết được requirement ↔ test, không nhầm AC giữa các ticket.
+- Bug: `/fix-bug` viết test hồi quy `<BUG-ID>: ...` đỏ trước rồi mới sửa;
+  `/write-tests` tìm chỗ thiếu test và giao cho `test-writer`.
 
 ### 6. Review — 2 lớp
 1. Subagent `code-reviewer` (read-only) theo checklist các lỗi AI hay mắc:

@@ -201,22 +201,25 @@ void main() {
     verifyZeroInteractions(refreshClient);
   });
 
-  test('AC-7: clears session when the refresh token is rejected', () async {
-    final options = RequestOptions(path: '/auth/refresh');
-    stubRefreshError(
-      DioException(
-        requestOptions: options,
-        response: Response<dynamic>(requestOptions: options, statusCode: 401),
-        type: DioExceptionType.badResponse,
-      ),
-    );
-    final handler = _Handler();
+  test(
+    'AUTH-001 AC-7: clears session when the refresh token is rejected',
+    () async {
+      final options = RequestOptions(path: '/auth/refresh');
+      stubRefreshError(
+        DioException(
+          requestOptions: options,
+          response: Response<dynamic>(requestOptions: options, statusCode: 401),
+          type: DioExceptionType.badResponse,
+        ),
+      );
+      final handler = _Handler();
 
-    await interceptor.onError(unauthorized('/auth/me'), handler);
+      await interceptor.onError(unauthorized('/auth/me'), handler);
 
-    expect(handler.forwarded?.response?.statusCode, 401);
-    verify(() => storage.clear()).called(1);
-  });
+      expect(handler.forwarded?.response?.statusCode, 401);
+      verify(() => storage.clear()).called(1);
+    },
+  );
 
   group('storage errors', () {
     final errors = <String, Object>{

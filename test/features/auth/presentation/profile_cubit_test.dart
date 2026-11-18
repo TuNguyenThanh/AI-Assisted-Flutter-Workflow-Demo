@@ -21,7 +21,7 @@ void main() {
   ProfileCubit build() => ProfileCubit(getProfile: getProfile, logout: logout);
 
   blocTest<ProfileCubit, ProfileState>(
-    'AC-6: loads profile',
+    'AUTH-001 AC-6: loads profile',
     setUp: () => when(
       () => getProfile(),
     ).thenAnswer((_) async => const Success(tUser)),
@@ -31,7 +31,7 @@ void main() {
   );
 
   blocTest<ProfileCubit, ProfileState>(
-    'AC-7: flags session expiry so UI can redirect to login',
+    'AUTH-001 AC-7: flags session expiry so UI can redirect to login',
     setUp: () => when(
       () => getProfile(),
     ).thenAnswer((_) async => const Failed(UnauthorizedFailure())),
@@ -60,7 +60,7 @@ void main() {
   );
 
   blocTest<ProfileCubit, ProfileState>(
-    'AC-6: logout clears session',
+    'AUTH-001 AC-6: logout clears session',
     build: build,
     act: (c) => c.logout(),
     expect: () => const [ProfileLoggedOut()],

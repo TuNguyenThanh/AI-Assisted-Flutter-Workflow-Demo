@@ -58,25 +58,28 @@ void main() {
     ).called(1);
   });
 
-  testWidgets('AC-5: disables button and shows spinner while submitting', (
-    tester,
-  ) async {
-    when(
-      () => cubit.state,
-    ).thenReturn(const LoginState(status: LoginStatus.submitting));
-    await tester.pumpWidget(wrap());
+  testWidgets(
+    'AUTH-001 AC-5: disables button and shows spinner while submitting',
+    (
+      tester,
+    ) async {
+      when(
+        () => cubit.state,
+      ).thenReturn(const LoginState(status: LoginStatus.submitting));
+      await tester.pumpWidget(wrap());
 
-    final button = tester.widget<FilledButton>(
-      find.descendant(
-        of: find.byKey(const Key('login_submit')),
-        matching: find.byType(FilledButton),
-      ),
-    );
-    expect(button.onPressed, isNull);
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
-  });
+      final button = tester.widget<FilledButton>(
+        find.descendant(
+          of: find.byKey(const Key('login_submit')),
+          matching: find.byType(FilledButton),
+        ),
+      );
+      expect(button.onPressed, isNull);
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    },
+  );
 
-  testWidgets('AC-2: shows error message', (tester) async {
+  testWidgets('AUTH-001 AC-2: shows error message', (tester) async {
     when(() => cubit.state).thenReturn(
       const LoginState(status: LoginStatus.failure, errorMessage: 'Oops'),
     );
@@ -85,7 +88,7 @@ void main() {
     expect(find.text('Oops'), findsOneWidget);
   });
 
-  testWidgets('AC-1: navigates to profile on success', (tester) async {
+  testWidgets('AUTH-001 AC-1: navigates to profile on success', (tester) async {
     whenListen(
       cubit,
       Stream.fromIterable(const [

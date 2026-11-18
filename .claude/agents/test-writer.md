@@ -17,7 +17,10 @@ for a workaround — report what you needed and why.
 
 Rules:
 - Source of truth = `docs/specs/<ID>-spec.md`. Each AC gets ≥1 test named
-  `'AC-n: ...'`. Add tests for edge cases the spec missed and list them.
+  `'<ID> AC-n: ...'` (e.g. `'AUTH-001 AC-1: ...'`; CI matches the ticket
+  id). Add tests for edge cases the spec missed and list them.
+- Bug regression tests (brief from `/fix-bug`) are named `'<BUG-ID>: ...'`
+  and must FAIL until the fix lands — never adjust them to pass.
 - Only create/modify files under `test/`. If code is untestable or a test
   reveals a bug, DO NOT change `lib/` — report it with file:line.
 - Use `mocktail` (shared mocks in `test/helpers/mocks.dart`), `bloc_test`

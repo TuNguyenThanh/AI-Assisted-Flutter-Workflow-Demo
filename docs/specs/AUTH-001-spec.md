@@ -4,7 +4,7 @@
 > `get_api_contract()`. Reviewed and edited by me before any code was
 > written — see **Human review notes** at the bottom.
 
-## Acceptance criteria (each one maps to ≥1 test, test names start with `AC-n`)
+## Acceptance criteria (each one maps to ≥1 test, test names start with `AUTH-001 AC-n`)
 | ID   | Given / When / Then | Test |
 |------|---------------------|------|
 | AC-1 | Valid credentials → tokens saved securely → navigate to Profile | `auth_repository_impl_test`, `login_cubit_test`, `login_page_test` |

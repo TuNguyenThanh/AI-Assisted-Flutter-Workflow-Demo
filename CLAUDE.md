@@ -45,7 +45,8 @@ lib/
 - Must work on small screens (360dp), large text scale (1.3x) and dark mode if the design defines it.
 
 ## Testing
-- Every acceptance criterion in `docs/specs/<TICKET>-spec.md` has a test whose name starts with `AC-n`.
+- Every acceptance criterion in `docs/specs/<TICKET>-spec.md` has a test whose name starts with `'<TICKET> AC-n: '` (e.g. `'AUTH-001 AC-1: …'` — CI matches the ticket id, not just `AC-n`).
+- Every bug fix has a regression test named `'<BUG-ID>: …'` (or `'regression: …'` without an id).
 - Mocks with `mocktail` in `test/helpers/mocks.dart`; cubits with `bloc_test`.
 - Widgets: find by `Key('<feature>_<element>')`.
 
@@ -53,8 +54,10 @@ lib/
 1. Read the ticket via MCP: `get_requirement("<ID>")`, API via `get_api_contract`.
 2. Use plan mode / `spec-writer` agent → write `docs/specs/<ID>-spec.md` → WAIT for human approval.
 3. Implement layer by layer (domain → data → presentation), small commits.
-4. Tests via `test-writer` agent; review via `code-reviewer` agent.
+4. Tests via `test-writer` agent (`/write-tests` finds gaps and briefs it); review via `code-reviewer` agent.
 5. `/pr-ready` before opening a PR.
+
+Bugs: `/fix-bug <ID>` — reproduce → root cause → failing regression test → smallest fix, on a `fix/<ID>-…` branch.
 
 ## Definition of done
 - [ ] `/pr-ready` passes (same checks as CI: `fvm flutter analyze --fatal-infos` 0 issues, `fvm dart format` clean, tokens in sync, all tests green)

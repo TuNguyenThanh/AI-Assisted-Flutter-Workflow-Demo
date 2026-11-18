@@ -28,7 +28,7 @@ void main() {
   });
 
   group('login', () {
-    test('AC-1: saves tokens and returns user on success', () async {
+    test('AUTH-001 AC-1: saves tokens and returns user on success', () async {
       when(
         () => remote.login(username: 'emilys', password: 'emilyspass'),
       ).thenAnswer((_) async => LoginResponseModel.fromJson(tLoginJson));
@@ -48,26 +48,29 @@ void main() {
       ).called(1);
     });
 
-    test('AC-2: maps invalid credentials and stores nothing', () async {
-      when(
-        () => remote.login(
-          username: any(named: 'username'),
-          password: any(named: 'password'),
-        ),
-      ).thenThrow(const InvalidCredentialsException());
+    test(
+      'AUTH-001 AC-2: maps invalid credentials and stores nothing',
+      () async {
+        when(
+          () => remote.login(
+            username: any(named: 'username'),
+            password: any(named: 'password'),
+          ),
+        ).thenThrow(const InvalidCredentialsException());
 
-      final result = await repository.login(username: 'a', password: 'b');
+        final result = await repository.login(username: 'a', password: 'b');
 
-      expect((result as Failed).failure, const InvalidCredentialsFailure());
-      verifyNever(
-        () => storage.saveTokens(
-          accessToken: any(named: 'accessToken'),
-          refreshToken: any(named: 'refreshToken'),
-        ),
-      );
-    });
+        expect((result as Failed).failure, const InvalidCredentialsFailure());
+        verifyNever(
+          () => storage.saveTokens(
+            accessToken: any(named: 'accessToken'),
+            refreshToken: any(named: 'refreshToken'),
+          ),
+        );
+      },
+    );
 
-    test('AC-3: maps network errors', () async {
+    test('AUTH-001 AC-3: maps network errors', () async {
       when(
         () => remote.login(
           username: any(named: 'username'),
@@ -142,7 +145,7 @@ void main() {
       expect((result as Success).value, tUser);
     });
 
-    test('AC-7: clears session when unauthorized', () async {
+    test('AUTH-001 AC-7: clears session when unauthorized', () async {
       when(() => remote.getMe()).thenThrow(const UnauthorizedException());
 
       final result = await repository.getProfile();
@@ -169,7 +172,7 @@ void main() {
       expect(await repository.hasSession(), isFalse);
     });
 
-    test('AC-6: logout clears tokens', () async {
+    test('AUTH-001 AC-6: logout clears tokens', () async {
       await repository.logout();
       verify(() => storage.clear()).called(1);
     });

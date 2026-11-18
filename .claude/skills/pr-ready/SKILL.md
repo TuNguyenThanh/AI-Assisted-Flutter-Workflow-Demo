@@ -53,8 +53,13 @@ the only way forward, stop and ask the human.
   `analysis_options.yaml` / `CLAUDE.md`.
 
 ## 3. Spec ↔ tests
-- Map each `AC-n` in `docs/specs/<ID>-spec.md` to a test name
-  (`grep -rn "AC-" test/`). Any AC without a test → blocker.
+- Map each `AC-n` in `docs/specs/<ID>-spec.md` to a test named
+  `'<ID> AC-n: …'` (`grep -rn "'<ID> AC-" test/`). Any AC without a test
+  → blocker. A bare `'AC-n:'` name does not count (CI ignores it).
+- Branch `fix/<ID>-…` (bug fix): at least one test named `'<ID>: …'` must
+  be added in `git diff main...HEAD -- test/` → otherwise blocker (no fix
+  without a regression test, see `/fix-bug`). In the PR body, replace the
+  AC table with: root cause, regression test name, other places fixed.
 - If the UI/design changed, the spec's "Human review notes" must be updated.
 
 ## 4. PR body

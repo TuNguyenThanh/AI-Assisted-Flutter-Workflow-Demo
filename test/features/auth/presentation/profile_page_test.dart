@@ -40,7 +40,7 @@ void main() {
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 
-  testWidgets('AC-6: shows user details', (tester) async {
+  testWidgets('AUTH-001 AC-6: shows user details', (tester) async {
     when(() => cubit.state).thenReturn(const ProfileLoaded(tUser));
     await tester.pumpWidget(wrap());
 
@@ -60,7 +60,7 @@ void main() {
     verify(() => cubit.load()).called(1);
   });
 
-  testWidgets('AC-6: logout button calls cubit', (tester) async {
+  testWidgets('AUTH-001 AC-6: logout button calls cubit', (tester) async {
     when(() => cubit.state).thenReturn(const ProfileLoaded(tUser));
     await tester.pumpWidget(wrap());
 
@@ -69,7 +69,7 @@ void main() {
     verify(() => cubit.logout()).called(1);
   });
 
-  testWidgets('AC-6: navigates to login after logout', (tester) async {
+  testWidgets('AUTH-001 AC-6: navigates to login after logout', (tester) async {
     whenListen(
       cubit,
       Stream.fromIterable(const [ProfileLoggedOut()]),
@@ -81,7 +81,7 @@ void main() {
     expect(find.text('LOGIN'), findsOneWidget);
   });
 
-  testWidgets('AC-7: navigates to login when session expired', (
+  testWidgets('AUTH-001 AC-7: navigates to login when session expired', (
     tester,
   ) async {
     whenListen(

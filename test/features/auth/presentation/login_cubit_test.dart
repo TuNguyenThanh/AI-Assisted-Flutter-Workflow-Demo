@@ -25,7 +25,7 @@ void main() {
 
   group('LoginCubit', () {
     blocTest<LoginCubit, LoginState>(
-      'AC-1: emits [submitting, success] on valid credentials',
+      'AUTH-001 AC-1: emits [submitting, success] on valid credentials',
       setUp: () => stubLogin(const Success(tUser)),
       build: () => LoginCubit(login),
       act: (c) => c.submit(username: 'emilys', password: 'emilyspass'),
@@ -36,7 +36,7 @@ void main() {
     );
 
     blocTest<LoginCubit, LoginState>(
-      'AC-2: emits failure message on wrong password',
+      'AUTH-001 AC-2: emits failure message on wrong password',
       setUp: () => stubLogin(const Failed(InvalidCredentialsFailure())),
       build: () => LoginCubit(login),
       act: (c) => c.submit(username: 'emilys', password: 'wrongpass'),
@@ -50,7 +50,7 @@ void main() {
     );
 
     blocTest<LoginCubit, LoginState>(
-      'AC-4: validates empty username without calling API',
+      'AUTH-001 AC-4: validates empty username without calling API',
       build: () => LoginCubit(login),
       act: (c) => c.submit(username: '   ', password: 'emilyspass'),
       expect: () => const [
@@ -68,7 +68,7 @@ void main() {
     );
 
     blocTest<LoginCubit, LoginState>(
-      'AC-4: validates short password',
+      'AUTH-001 AC-4: validates short password',
       build: () => LoginCubit(login),
       act: (c) => c.submit(username: 'emilys', password: '123'),
       expect: () => [
@@ -79,7 +79,7 @@ void main() {
     );
 
     test(
-      'AC-5: ignores a second submit while the first is in flight',
+      'AUTH-001 AC-5: ignores a second submit while the first is in flight',
       () async {
         final completer = Completer<Result<User>>();
         when(

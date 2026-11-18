@@ -3,7 +3,9 @@ description: Testing conventions
 globs: test/**/*.dart
 alwaysApply: false
 ---
-- Test names for acceptance criteria start with `AC-n:` (see docs/specs).
+- Test names for acceptance criteria start with `<TICKET> AC-n:`, e.g.
+  `'AUTH-001 AC-1: ...'` (see docs/specs; CI matches the ticket id).
+- Bug regression tests are named `'<BUG-ID>: ...'`.
 - mocktail + bloc_test; shared mocks in `test/helpers/mocks.dart`,
   fixtures in `test/helpers/fixtures.dart`.
 - Never weaken an assertion to make a test pass.

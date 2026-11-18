@@ -29,22 +29,25 @@ void main() {
     () => secure.delete(key: any(named: 'key')),
   ).thenAnswer((_) async {});
 
-  test('AC-1: saves and reads tokens under the expected keys', () async {
-    stubWrite();
-    when(
-      () => secure.read(key: 'access_token'),
-    ).thenAnswer((_) async => 'a1');
-    when(
-      () => secure.read(key: 'refresh_token'),
-    ).thenAnswer((_) async => 'r1');
+  test(
+    'AUTH-001 AC-1: saves and reads tokens under the expected keys',
+    () async {
+      stubWrite();
+      when(
+        () => secure.read(key: 'access_token'),
+      ).thenAnswer((_) async => 'a1');
+      when(
+        () => secure.read(key: 'refresh_token'),
+      ).thenAnswer((_) async => 'r1');
 
-    await storage.saveTokens(accessToken: 'a1', refreshToken: 'r1');
+      await storage.saveTokens(accessToken: 'a1', refreshToken: 'r1');
 
-    verify(() => secure.write(key: 'access_token', value: 'a1')).called(1);
-    verify(() => secure.write(key: 'refresh_token', value: 'r1')).called(1);
-    expect(await storage.readAccessToken(), 'a1');
-    expect(await storage.readRefreshToken(), 'r1');
-  });
+      verify(() => secure.write(key: 'access_token', value: 'a1')).called(1);
+      verify(() => secure.write(key: 'refresh_token', value: 'r1')).called(1);
+      expect(await storage.readAccessToken(), 'a1');
+      expect(await storage.readRefreshToken(), 'r1');
+    },
+  );
 
   test('regression: clear deletes both token keys', () async {
     stubDelete();

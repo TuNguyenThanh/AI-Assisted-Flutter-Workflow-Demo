@@ -16,7 +16,7 @@ AUTH-XXX — <title>
 ## Checklist for AI-generated code
 - [ ] I have read every changed line and can explain it
 - [ ] Spec in `docs/specs/` is approved and up to date
-- [ ] Every AC has a test named `AC-n`; I added edge cases the AI missed
+- [ ] Every AC has a test named `<TICKET> AC-n: …` (bug fix: a regression test `<BUG-ID>: …`); I added edge cases the AI missed
 - [ ] No secrets/tokens/PII stored insecurely or logged
 - [ ] Lifecycle: controllers/streams disposed, no emit after close, no context after async gap
 - [ ] No API/params that don't exist in our package versions

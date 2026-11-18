@@ -67,7 +67,7 @@ void main() {
       expect(body['password'], 'emilyspass');
     });
 
-    test('AC-2: 400 maps to InvalidCredentialsException', () {
+    test('AUTH-001 AC-2: 400 maps to InvalidCredentialsException', () {
       stubLoginError(dioError(DioExceptionType.badResponse, status: 400));
 
       expect(
@@ -76,20 +76,23 @@ void main() {
       );
     });
 
-    test('AC-3: connection errors and timeouts map to NetworkException', () {
-      for (final type in [
-        DioExceptionType.connectionError,
-        DioExceptionType.connectionTimeout,
-        DioExceptionType.receiveTimeout,
-      ]) {
-        stubLoginError(dioError(type));
-        expect(
-          () => dataSource.login(username: 'a', password: 'b'),
-          throwsA(isA<NetworkException>()),
-          reason: '$type',
-        );
-      }
-    });
+    test(
+      'AUTH-001 AC-3: connection errors and timeouts map to NetworkException',
+      () {
+        for (final type in [
+          DioExceptionType.connectionError,
+          DioExceptionType.connectionTimeout,
+          DioExceptionType.receiveTimeout,
+        ]) {
+          stubLoginError(dioError(type));
+          expect(
+            () => dataSource.login(username: 'a', password: 'b'),
+            throwsA(isA<NetworkException>()),
+            reason: '$type',
+          );
+        }
+      },
+    );
 
     test('malformed body maps to ServerException', () {
       stubLogin(
@@ -118,7 +121,7 @@ void main() {
       expect(user.toEntity(), tUser);
     });
 
-    test('AC-7: 401 maps to UnauthorizedException', () {
+    test('AUTH-001 AC-7: 401 maps to UnauthorizedException', () {
       when(
         () => dio.get<Map<String, dynamic>>('/auth/me'),
       ).thenThrow(dioError(DioExceptionType.badResponse, status: 401));
