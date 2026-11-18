@@ -1,0 +1,9 @@
+---
+description: Testing conventions
+globs: test/**/*.dart
+alwaysApply: false
+---
+- Test names for acceptance criteria start with `AC-n:` (see docs/specs).
+- mocktail + bloc_test; shared mocks in `test/helpers/mocks.dart`,
+  fixtures in `test/helpers/fixtures.dart`.
+- Never weaken an assertion to make a test pass.

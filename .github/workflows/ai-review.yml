@@ -1,0 +1,31 @@
+# Optional: AI first-pass review on every PR, using the same review
+# checklist as the local `code-reviewer` subagent.
+# DISABLED by default (the job is skipped, not failed). To enable: add repo
+# secret ANTHROPIC_API_KEY and repo variable AI_REVIEW_ENABLED=true
+# (Settings → Secrets and variables → Actions). Human approval is still
+# required by branch protection — the AI review never auto-approves.
+name: AI review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  review:
+    if: ${{ vars.AI_REVIEW_ENABLED == 'true' && !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            Review this PR following .claude/agents/code-reviewer.md and
+            CLAUDE.md. Post only real issues as inline comments with a
+            concrete fix. Do not approve.

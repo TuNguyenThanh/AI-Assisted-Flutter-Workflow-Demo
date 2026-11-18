@@ -1,0 +1,87 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # The AI guardrails are code too: a broken hook silently lets everything
+  # through, so they are tested on every PR.
+  hooks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.47.4 # keep in sync with .fvmrc
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: ShellCheck hooks + scripts
+        run: shellcheck -S warning .claude/hooks/*.sh scripts/*.sh
+      - name: Hook behaviour tests
+        run: bash scripts/test_hooks.sh
+
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.47.4 # keep in sync with .fvmrc
+          channel: stable
+          cache: true
+
+      - run: flutter pub get
+
+      - name: Format
+        run: dart format --set-exit-if-changed lib test tool
+
+      - name: Design tokens in sync (design/tokens.json -> app_tokens.g.dart)
+        run: dart run tool/generate_tokens.dart --check
+
+      - name: Analyze
+        run: flutter analyze --fatal-infos
+
+      - name: Test
+        run: flutter test --coverage
+
+      - name: Coverage gate (lib/features + lib/core/widgets >= 80%)
+        run: bash scripts/coverage_check.sh 80
+
+      - name: AC ↔ test traceability
+        run: |
+          missing=0
+          for spec in docs/specs/*-spec.md; do
+            for ac in $(grep -oE '^\| AC-[0-9]+' "$spec" | tr -d '| '); do
+              grep -rq "'$ac:" test/ || { echo "::error::$ac in $spec has no test"; missing=1; }
+            done
+          done
+          exit $missing
+
+  # # Unit/widget tests don't catch native config issues (minSdk, compileSdk,
+  # # NDK) — a plugin bump broke the Android build once while tests were green.
+  # build-android:
+  #   needs: quality
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 30
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-java@v4
+  #       with:
+  #         distribution: temurin
+  #         java-version: 17
+  #     - uses: subosito/flutter-action@v2
+  #       with:
+  #         flutter-version: 3.47.4 # keep in sync with .fvmrc
+  #         channel: stable
+  #         cache: true
+  #     - run: flutter build apk --debug

@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "disableBypassPermissionsMode": "disable",
+    "allow": [
+      "Bash(fvm flutter analyze:*)",
+      "Bash(fvm flutter test:*)",
+      "Bash(fvm flutter pub get)",
+      "Bash(fvm flutter build apk --debug)",
+      "Bash(fvm dart format:*)",
+      "Bash(fvm dart run tool/generate_tokens.dart:*)",
+      "Bash(git status:*)",
+      "Bash(git branch --show-current)",
+      "Bash(bash scripts/coverage_check.sh:*)",
+      "Bash(bash scripts/test_hooks.sh)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "mcp__project-docs__list_requirements",
+      "mcp__project-docs__get_requirement",
+      "mcp__project-docs__get_api_contract",
+      "mcp__figma__get_design_context",
+      "mcp__figma__get_variable_defs",
+      "mcp__figma__get_screenshot",
+      "mcp__figma__get_metadata",
+      "mcp__figma__create_session"
+    ],
+    "ask": [
+      "Bash(git commit:*)",
+      "Bash(git merge:*)",
+      "Bash(git rebase:*)",
+      "Bash(git reset:*)",
+      "Bash(git checkout:*)",
+      "Bash(git restore:*)",
+      "Bash(git clean:*)",
+      "Bash(git stash:*)",
+      "Bash(fvm flutter pub add:*)",
+      "Bash(fvm dart pub add:*)",
+      "Bash(flutter pub add:*)",
+      "Bash(dart pub add:*)",
+      "Edit(./.claude/**)",
+      "Write(./.claude/**)",
+      "Edit(./.github/**)",
+      "Write(./.github/**)",
+      "Edit(./scripts/**)",
+      "Write(./scripts/**)",
+      "Edit(./CLAUDE.md)",
+      "Edit(./analysis_options.yaml)",
+      "Edit(./pubspec.yaml)"
+    ],
+    "deny": [
+      "Bash(git push:*)",
+      "Bash(git commit --no-verify:*)",
+      "Bash(git commit -n:*)",
+      "Bash(rm -rf:*)",
+      "Bash(sudo:*)",
+      "Bash(fvm flutter pub publish:*)",
+      "Bash(flutter pub publish:*)",
+      "Bash(fastlane:*)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/key.properties)",
+      "Read(**/*.jks)",
+      "Read(**/*.keystore)",
+      "Read(**/*.p12)",
+      "Read(**/*.mobileprovision)",
+      "Read(**/google-services.json)",
+      "Read(**/GoogleService-Info.plist)",
+      "Edit(./.claude/settings.local.json)",
+      "Write(./.claude/settings.local.json)",
+      "Edit(~/.claude/settings.json)",
+      "Write(~/.claude/settings.json)"
+    ]
+  },
+  "enableAllProjectMcpServers": false,
+  "enabledMcpjsonServers": [
+    "project-docs",
+    "figma"
+  ],
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit|Read|Grep|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/guard_files.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/post_edit_dart.sh",
+            "timeout": 60
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/stop_check.sh",
+            "timeout": 600
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,94 @@
+openapi: 3.0.3
+info:
+  title: Auth API (DummyJSON)
+  version: 1.0.0
+servers:
+  - url: https://dummyjson.com
+paths:
+  /auth/login:
+    post:
+      summary: Sign in and receive tokens
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [username, password]
+              properties:
+                username: { type: string, example: emilys }
+                password: { type: string, example: emilyspass }
+                expiresInMins: { type: integer, example: 30 }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LoginResponse" }
+        "400":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /auth/me:
+    get:
+      summary: Current user profile
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/User" }
+        "401":
+          description: Token expired or invalid
+  /auth/refresh:
+    post:
+      summary: Exchange refresh token for a new token pair
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refreshToken]
+              properties:
+                refreshToken: { type: string }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken: { type: string }
+                  refreshToken: { type: string }
+        "401":
+          description: Refresh token invalid
+components:
+  securitySchemes:
+    bearerAuth: { type: http, scheme: bearer }
+  schemas:
+    User:
+      type: object
+      required: [id, username]
+      properties:
+        id: { type: integer }
+        username: { type: string }
+        email: { type: string }
+        firstName: { type: string }
+        lastName: { type: string }
+        image: { type: string, format: uri }
+    LoginResponse:
+      allOf:
+        - $ref: "#/components/schemas/User"
+        - type: object
+          required: [accessToken, refreshToken]
+          properties:
+            accessToken: { type: string }
+            refreshToken: { type: string }
+    Error:
+      type: object
+      properties:
+        message: { type: string }

@@ -1,0 +1,2 @@
+// Per-developer signing — copy to Local.xcconfig (git-ignored) and set your team.
+DEVELOPMENT_TEAM = YOUR_TEAM_ID

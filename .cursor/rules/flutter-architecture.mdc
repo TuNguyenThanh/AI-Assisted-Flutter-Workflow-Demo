@@ -1,0 +1,18 @@
+---
+description: Clean Architecture + Cubit rules for this Flutter repo
+globs: lib/**/*.dart
+alwaysApply: true
+---
+Same rules as CLAUDE.md (single source of truth — keep them in sync):
+
+- Layers: `features/<f>/{domain,data,presentation}`; domain is pure Dart.
+- Data sources throw `AppException`; repositories return `Result<T>`
+  (`Success` / `Failed(Failure)`); UI never sees Dio.
+- Cubit by default; immutable Equatable states; `if (isClosed) return;`
+  after every await before emit.
+- Tokens only via `TokenStorage`. Never log headers/body.
+- `package:` imports only. Keys on interactive widgets: `Key('<f>_<el>')`.
+- Figma MCP output (React/Tailwind) is a spec, not code: rebuild with
+  Flutter layout widgets; colors/text/spacing from `ThemeData`, no inline
+  hex or absolute positioning.
+- Don't edit `*.g.dart` / `*.freezed.dart`.
