@@ -85,7 +85,7 @@ expect allow "tests piped to tail"               "$(bash_j 'fvm flutter test 2>&
 expect allow "Edit feature code"                 "$(file_j Edit "$root/lib/features/auth/presentation/pages/login_page.dart")"
 
 echo "== guard_files.sh: test-writer sandbox"
-TW=test-writer
+TW="test-writer"
 expect allow "write under test/"                 "$(file_j Write "$root/test/foo_test.dart" $TW)"
 expect deny  "write lib/"                        "$(file_j Write "$root/lib/foo.dart" $TW)"
 expect deny  "escape test/ with .."              "$(file_j Write "$root/test/../lib/foo.dart" $TW)"
@@ -108,7 +108,7 @@ expect deny  "python one-liner"                  "$(bash_j "python3 -c 'open(\"l
 expect deny  "start claude"                      "$(bash_j 'claude -p hi' $TW)"
 
 echo "== guard_files.sh: code-reviewer sandbox"
-CR=code-reviewer
+CR="code-reviewer"
 expect allow "git diff main...HEAD"              "$(bash_j 'git diff main...HEAD' $CR)"
 expect allow "git status"                        "$(bash_j 'git status --porcelain' $CR)"
 expect allow "git log | head"                    "$(bash_j 'git log --oneline | head -5' $CR)"
@@ -120,7 +120,7 @@ expect deny  "git branch -D"                     "$(bash_j 'git branch -D main' 
 expect deny  "git diff escaping with .."         "$(bash_j 'git diff ../other' $CR)"
 
 echo "== guard_files.sh: spec-writer sandbox"
-SW=spec-writer
+SW="spec-writer"
 expect allow "write docs/specs/"                 "$(file_j Write "$root/docs/specs/AUTH-002-spec.md" $SW)"
 expect deny  "write lib/"                        "$(file_j Write "$root/lib/x.dart" $SW)"
 expect deny  "any shell"                         "$(bash_j 'ls' $SW)"
